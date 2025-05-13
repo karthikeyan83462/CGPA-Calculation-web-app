@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Manual GPA Result{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-800 text-black dark:text-white rounded shadow">
+
+    <h2 class="text-3xl font-semibold text-center mb-6">Semester-wise GPA Result</h2>
+
+    {% for sem in results %}
+        <div class="mb-8">
+            <h3 class="text-xl font-bold mb-2">Semester {{ sem.semester }}</h3>
+            <table class="w-full table-auto border border-gray-400 dark:border-gray-600 mb-2">
+                <thead>
+                    <tr class="bg-gray-300 dark:bg-gray-700">
+                        <th class="p-2 border">Subject</th>
+                        <th class="p-2 border">Grade</th>
+                        <th class="p-2 border">Credit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subject in sem.subjects %}
+                        <tr class="text-center">
+                            <td class="p-2 border">{{ subject.Subject }}</td>
+                            <td class="p-2 border">{{ subject.Grade }}</td>
+                            <td class="p-2 border">{{ subject.Credit }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p class="text-lg font-semibold text-center">GPA: <span class="text-green-600">{{ sem.gpa }}</span></p>
+        </div>
+    {% endfor %}
+
+    <div class="text-xl text-center mt-8">
+        <p>Overall CGPA: <span class="font-bold text-green-600">{{ cgpa }}</span></p>
+    </div>
+    
+    <div class="text-center mt-6">
+        <a href="{{ url_for('manual_entry') }}" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition-all">Enter Again</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload PDF for GPA Calculation{% endblock %}
+
+{% block content %}
+<main class="flex-grow max-w-4xl mx-auto px-0 py-10">
+<div class="max-w-3xl mx-auto bg-white dark:bg-gray-800 text-black dark:text-white p-8 rounded-xl shadow-lg mt-10">
+    <h2 class="text-3xl font-bold text-center mb-8">📄 Upload PDF with Grades</h2>
+
+    <!-- Upload Form -->
+    <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}" class="space-y-6">
+        <label for="file-upload"
+            class="flex items-center justify-center w-full h-48 p-6 text-gray-500 bg-gray-100 dark:bg-gray-700 border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300">
+            <span class="text-center w-full">
+                <svg class="mx-auto w-12 h-12 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M7 16v-4a4 4 0 018 0v4m-6 4h4m-2-4v4m5-16l5 5m0 0l-5 5m5-5H9" />
+                </svg>
+                <p class="mt-2">Click to upload or drag and drop PDFs here</p>
+                <p class="text-sm text-gray-400">.pdf only — you can upload multiple</p>
+            </span>
+            <input id="file-upload" type="file" name="files" accept=".pdf" multiple required class="hidden">
+
+        </label>
+
+        <!-- Display Selected File Names -->
+        <div id="file-list" class="mt-4 text-sm text-gray-700 dark:text-gray-200">
+            <!-- File names will be inserted here by JavaScript -->
+        </div>
+
+        <div class="text-center">
+            <button type="submit"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-transform transform hover:scale-105 shadow">
+                🔍 Upload & Calculate CGPA
+            </button>
+        </div>
+    </form>
+</div>
+</main>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const fileInput = document.getElementById("file-upload");
+        const fileList = document.getElementById("file-list");
+
+        // Event listener for file input change
+        fileInput.addEventListener("change", function() {
+            const files = fileInput.files;
+
+            if (files.length > 0) {
+                // Create a list of file names
+                let fileNamesList = "<p class='font-medium text-gray-700 dark:text-gray-300'>Selected Files:</p><ul class='list-disc pl-6'>";
+                for (let i = 0; i < files.length; i++) {
+                    fileNamesList += `<li class="text-gray-600 dark:text-gray-300">${files[i].name}</li>`;
+                }
+                fileNamesList += "</ul>";
+
+                // Update the file-list container with the file names
+                fileList.innerHTML = fileNamesList;
+            } else {
+                // Clear the file names if no files are selected
+                fileList.innerHTML = "";
+            }
+        });
+    });
+</script>
+
+{% endblock %}
+    

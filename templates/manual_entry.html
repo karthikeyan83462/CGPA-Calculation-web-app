@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% block title %}Manual GPA Entry{% endblock %}
+
+{% block content %}
+<main class="flex-grow max-w-4xl mx-auto px-0 py-14">
+
+<div class="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-800 text-black dark:text-white rounded shadow">
+
+    <h2 class="text-3xl font-semibold text-center mb-6">Enter Subjects and Grades Semester-wise</h2>
+
+    <form method="POST" action="{{ url_for('manual_entry') }}" class="space-y-6" id="semester-form">
+        <div id="semesters-container">
+            <!-- Initial Semester -->
+            <div class="semester-block border border-gray-400 dark:border-gray-600 rounded-lg p-4 mb-6 bg-gray-100 dark:bg-gray-700">
+                <h3 class="text-xl font-bold mb-4">Semester 1</h3>
+                <input type="hidden" name="semester[]" value="1">
+                <table class="w-full table-auto bg-white text-black dark:bg-gray-800 dark:text-white border border-gray-300 dark:border-gray-600">
+                    <thead class="bg-gray-300 dark:bg-gray-700">
+                        <tr>
+                            <th class="p-2 border">Subject</th>
+                            <th class="p-2 border">Grade</th>
+                            <th class="p-2 border">Credits</th>
+                            <th class="p-2 border">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="subject-table">
+                        <tr>
+                            <td class="border p-2"><input type="text" name="subject_1[]" class="p-2 border rounded w-full dark:bg-gray-900 dark:border-gray-600" value="Subject 1" required></td>
+                            <td class="border p-2">
+                                <select name="grade_1[]" class="p-2 border rounded w-full dark:bg-gray-900 dark:border-gray-600" required>
+                                    <option value="">Select</option>
+                                    <option value="O">O</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A">A</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B">B</option>
+                                    <option value="RA">RA</option>
+                                </select>
+                            </td>
+                            <td class="border p-2"><input type="number" name="credit_1[]" class="p-2 border rounded w-full dark:bg-gray-900 dark:border-gray-600" required></td>
+                            <td class="border p-2 text-center">
+                                <button type="button" onclick="removeRow(this)" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Remove</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="mt-4">
+                    <button type="button" onclick="addSubject(this, 1)" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Add Subject</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-4 justify-center mt-6">
+            <button type="button" onclick="addSemester()" class="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700">Add Semester</button>
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Submit</button>
+        </div>
+    </form>
+</div>
+</main>
+<script>
+    let semesterCount = 1;
+    let subjectCounters = {1: 1};  // Keep track of subject count for each semester
+
+    function addSemester() {
+        semesterCount++;
+        subjectCounters[semesterCount] = 1; // Initialize subject count for this semester
+
+        const container = document.getElementById('semesters-container');
+
+        const semesterBlock = document.createElement('div');
+        semesterBlock.className = 'semester-block border border-gray-400 dark:border-gray-600 rounded-lg p-4 mb-6 bg-gray-100 dark:bg-gray-700';
+        semesterBlock.innerHTML = `
+            <h3 class="text-xl font-bold mb-4">Semester ${semesterCount}</h3>
+            <input type="hidden" name="semester[]" value="${semesterCount}">
+            <table class="w-full table-auto bg-white text-black dark:bg-gray-800 dark:text-white border border-gray-300 dark:border-gray-600">
+                <thead class="bg-gray-300 dark:bg-gray-700">
+                    <tr>
+                        <th class="p-2 border">Subject</th>
+                        <th class="p-2 border">Grade</th>
+                        <th class="p-2 border">Credits</th>
+                        <th class="p-2 border">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="subject-table">
+                    <tr>
+                        <td class="border p-2">
+                            <input type="text" name="subject_${semesterCount}[]" class="p-2 border rounded w-full dark:bg-gray-900 dark:border-gray-600" value="Subject 1" required>
+                        </td>
+                        <td class="border p-2">
+                            <select name="grade_${semesterCount}[]" class="p-2 border rounded w-full dark:bg-gray-900 dark:border-gray-600" required>
+                                <option value="">Select</option>
+                                <option value="O">O</option>
+                                <option value="A+">A+</option>
+                                <option value="A">A</option>
+                                <option value="B+">B+</option>
+                                <option value="B">B</option>
+                                <option value="RA">RA</option>
+                            </select>
+                        </td>
+                        <td class="border p-2">
+                            <input type="number" name="credit_${semesterCount}[]" class="p-2 border rounded w-full dark:bg-gray-900 dark:border-gray-600" required>
+                        </td>
+                        <td class="border p-2 text-center">
+                            <button type="button" onclick="removeRow(this)" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Remove</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="mt-4">
+                <button type="button" onclick="addSubject(this, ${semesterCount})" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Add Subject</button>
+            </div>
+        `;
+
+        container.appendChild(semesterBlock);
+    }
+
+    function addSubject(button, semester) {
+        if (!subjectCounters[semester]) {
+            subjectCounters[semester] = 1;
+        }
+        subjectCounters[semester]++;
+
+        const tbody = button.parentElement.parentElement.querySelector('tbody');
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="border p-2">
+                <input type="text" name="subject_${semester}[]" class="p-2 border rounded w-full dark:bg-gray-900 dark:border-gray-600" value="Subject ${subjectCounters[semester]}" required>
+            </td>
+            <td class="border p-2">
+                <select name="grade_${semester}[]" class="p-2 border rounded w-full dark:bg-gray-900 dark:border-gray-600" required>
+                    <option value="">Select</option>
+                    <option value="O">O</option>
+                    <option value="A+">A+</option>
+                    <option value="A">A</option>
+                    <option value="B+">B+</option>
+                    <option value="B">B</option>
+                    <option value="RA">RA</option>
+                </select>
+            </td>
+            <td class="border p-2">
+                <input type="number" name="credit_${semester}[]" class="p-2 border rounded w-full dark:bg-gray-900 dark:border-gray-600" required>
+            </td>
+            <td class="border p-2 text-center">
+                <button type="button" onclick="removeRow(this)" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Remove</button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    }
+
+    function removeRow(btn) {
+        const row = btn.closest('tr');
+        row.remove();
+        // You could also decrement subjectCounters[semester] if needed
+    }
+</script>
+
+{% endblock %}

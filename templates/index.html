@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome - CGPA Calculator{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="text-4xl font-bold mb-4">Welcome to CGPA Calculator</h1>
+    <p class="text-lg mb-6">Choose a method to calculate your GPA and CGPA:</p>
+    <div class="flex flex-col sm:flex-row justify-center gap-6">
+        <a href="{{ url_for('manual_entry') }}" class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition">Manual Entry</a>
+        <a href="{{ url_for('upload') }}" class="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 transition">Upload PDF</a>
+    </div>
+
+    {% if table_html %}
+        <div class="mt-10">
+            <h2 class="text-2xl font-semibold mb-4">Extracted Table</h2>
+            <div class="overflow-x-auto">
+                <div class="bg-white p-4 rounded-lg shadow dark:bg-gray-800">
+                    {{ table_html|safe }}
+                </div>
+            </div>
+            <h3 class="mt-4 text-xl font-semibold">GPA: {{ gpa }}</h3>
+        </div>
+    {% endif %}
+</div>
+
+
+<main class="flex-grow max-w-4xl mx-auto px-4 py-12">
+    <section class="text-gray-800 dark:text-white space-y-8">
+        <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 mb-6 animate-fade-in">
+            How GPA & CGPA are Calculated ✨
+        </h1>
+
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition duration-300 hover:shadow-2xl">
+            <h2 class="text-2xl font-semibold mb-4 text-blue-600 dark:text-blue-400">📘 GPA Calculation</h2>
+            <p class="mb-4">Your GPA reflects your performance for a single semester. Here's how it works:</p>
+            <ul class="space-y-3 list-disc pl-6">
+                <li><strong>Step 1:</strong> Enter grades (O, A+, A, B+, B, RA) for each course.</li>
+                <li><strong>Step 2:</strong> Grades are mapped to points:
+                    <ul class="pl-4 mt-2 text-sm text-gray-600 dark:text-gray-400 list-inside list-disc">
+                        <li>O = 10</li>
+                        <li>A+ = 9</li>
+                        <li>A = 8</li>
+                        <li>B+ = 7</li>
+                        <li>B = 6</li>
+                        <li>RA = 0</li>
+                    </ul>
+                </li>
+                <li><strong>Step 3:</strong> Enter credit for each course.</li>
+                <li><strong>Step 4:</strong> Each grade point × corresponding credit is calculated.</li>
+                <li><strong>Step 5:</strong> Total weighted grade points are summed up.</li>
+                <li><strong>Step 6:</strong> GPA is calculated using:
+                    <div class="mt-2 bg-gray-100 dark:bg-gray-700 p-3 rounded text-sm font-mono text-purple-600 dark:text-purple-300">
+                        GPA = (Σ(Grade Points × Credits)) / ΣCredits
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition duration-300 hover:shadow-2xl">
+            <h2 class="text-2xl font-semibold mb-4 text-green-600 dark:text-green-400">🎓 CGPA Calculation</h2>
+            <p class="mb-4">Your CGPA shows your overall academic progress across all semesters:</p>
+            <ul class="space-y-3 list-disc pl-6">
+                <li><strong>Step 7:</strong> Each semester GPA × total semester credits is calculated.</li>
+                <li><strong>Step 8:</strong> Sum of all (GPA × credits) values is divided by the total credits.</li>
+                <li><strong>Formula:</strong>
+                    <div class="mt-2 bg-gray-100 dark:bg-gray-700 p-3 rounded text-sm font-mono text-green-600 dark:text-green-300">
+                        CGPA = (Σ(GPA × Semester Credits)) / Σ(Total Credits)
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="text-center mt-6">
+            <p class="text-lg font-medium text-gray-700 dark:text-gray-300">Track your academic journey easily and visually with this CGPA Calculator! 🚀</p>
+        </div>
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CGPA Calculator{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+<style>
+    .toggle-dot {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    input:checked + .toggle-bg .toggle-dot {
+        transform: translateX(1.25rem);
+    }
+
+    div * {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+
+</head>
+<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white transition-colors duration-300">
+
+
+    <!-- Navbar -->
+    <nav class="bg-white dark:bg-gray-800 shadow px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="{{ url_for('index') }}" class="flex items-center space-x-2">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="h-8 w-8">
+                <span class="text-2xl font-semibold dark:text-white">CGPA Calculator</span>
+            </a>
+
+            <div class="flex items-center space-x-6">
+                <a href="{{ url_for('manual_entry') }}" class="hover:text-blue-600 dark:hover:text-blue-400">Manual
+                    Entry</a>
+                <a href="{{ url_for('upload') }}" class="hover:text-blue-600 dark:hover:text-blue-400">Upload PDF</a>
+
+                <!-- Dark Mode Toggle -->
+                <label class="flex items-center cursor-pointer">
+                    <input type="checkbox" id="darkToggle" class="sr-only">
+                    <div class="toggle-bg w-11 h-6 bg-gray-300 dark:bg-gray-600 rounded-full relative">
+                        
+                        <div class="toggle-dot w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5"></div>
+                    </div>
+                </label>
+            </div>
+        </div>
+    </nav>
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700">
+        <div class="max-w-4xl mx-auto px-4 py-6 text-center text-sm text-gray-600 dark:text-gray-400">
+            <p>Developed by <span class="font-semibold text-blue-600 dark:text-blue-400">Karthikeyan</span></p>
+            <p>B.Tech Artificial Intelligence and Data Science</p>
+            <p>Coimbatore Institute of Technology, Tamil Nadu, India</p>
+            <p>&copy; 2025 CGPA Calculator. All rights reserved.</p>
+        </div>
+    </footer>
+
+
+    <script>
+        const toggle = document.getElementById('darkToggle');
+        const html = document.documentElement;
+
+        if (localStorage.getItem('theme') === 'dark') {
+            toggle.checked = true;
+            html.classList.add('dark');
+        }
+
+        toggle.addEventListener('change', () => {
+            if (toggle.checked) {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+</body>
+
+</html>
