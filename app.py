@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
 import pdfplumber
-
 import pandas as pd
 import unicodedata
 import re
